@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Riri’s Mini Shop</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #d63384;
+    }
+
+    .section {
+      background: white;
+      padding: 15px;
+      margin: 20px auto;
+      border-radius: 10px;
+      max-width: 800px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .card h3 {
+      color: #333;
+    }
+
+    .price {
+      color: #d63384;
+      font-weight: bold;
+    }
+
+    .btn {
+      background: #d63384;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .cart {
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .checkout {
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: gray;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🛍️ Riri’s Mini Shop</h1>
+
+<div class="section">
+  <h2>📦 Products (Arrays + Loops)</h2>
+  <div class="products" id="productList"></div>
+</div>
+
+<div class="section">
+  <h2>🧺 Cart Summary</h2>
+  <div id="cartList"></div>
+  <p id="cartSummary"></p>
+
+  <!-- CHECKOUT FORM -->
+  <div class="checkout">
+    <h3>Checkout</h3>
+    <input type="text" id="name" placeholder="Your Name">
+    <input type="text" id="address" placeholder="Your Address">
+    <input type="text" id="contact" placeholder="Contact Number">
+    <button class="btn" onclick="checkout()">Checkout</button>
+
+    <p id="orderResult"></p>
+  </div>
+</div>
+
+<div class="section">
+  <h2>📅 Today’s Date (Date Methods)</h2>
+  <p id="date"></p>
+</div>
+
+<div class="section">
+  <h2>ℹ️ About This Project</h2>
+  <ul>
+    <li>Module 2 – JavaScript Essentials</li>
+    <li>Module 3 – Logical Statements</li>
+    <li>Module 4 – Loops and Arrays</li>
+    <li>Module 5 – Functions</li>
+    <li>Module 6 – Built-in JavaScript Methods</li>
+  </ul>
+</div>
+
+<footer>
+  Midterm Project – Web Development
+</footer>
+
+<script>
+  const products = [
+    { id: 1, name: "Strawberry Keychain", price: 99, img: "IMAGE/strawberry-keychain.jpg" },
+    { id: 2, name: "Cute Notebook", price: 149, img: "IMAGE/cute-notebook.jpg" },
+    { id: 3, name: "Pastel Pen Set", price: 199, img: "IMAGE/pastel-pen-set.jpg" },
+    { id: 4, name: "Crochet Tote Bag", price: 299, img: "IMAGE/crochet-tote-bag.jpg" },
+    { id: 5, name: "Kawaii Pencil Case", price: 129, img: "IMAGE/kawaii-pencil-case.jpg" },
+    { id: 6, name: "Cute Eraser Set", price: 59, img: "IMAGE/cute-eraser-set.jpg" },
+    { id: 7, name: "Pastel Highlighter Set", price: 179, img: "IMAGE/pastel-highligther-set.jpg" },
+    { id: 8, name: "Sticker Sheet (Cute)", price: 89, img: "IMAGE/cute-sticker-sheet.jpg" },
+    { id: 9, name: "Mini Planner", price: 199, img: "IMAGE/mini-planner.jpg" },
+    { id: 10, name: "Cute Binder Clips", price: 69, img: "IMAGE/binder-clips.jpg" },
+    { id: 11, name: "Cute Animal Sticky Notes", price: 99, img: "IMAGE/animal-sticky-notes.jpg" },
+    { id: 12, name: "Kawaii Washi Tape Set", price: 129, img: "IMAGE/washi-tape-set.jpg" },
+    { id: 13, name: "Mini Cute Stapler", price: 149, img: "IMAGE/stapler.jpg" },
+    { id: 14, name: "Cute Pencil Sharpener", price: 59, img: "IMAGE/pencil-sharpener.jpg" },
+    { id: 15, name: "Pastel Ruler", price: 69, img: "IMAGE/pastel-ruler.jpg" },
+    { id: 16, name: "Cute Paper Clips", price: 49, img: "IMAGE/paper-clips.jpg" },
+    { id: 17, name: "Cute Folder Set", price: 179, img: "IMAGE/cute-folder-set.jpg" },
+    { id: 18, name: "Kawaii Water Bottle", price: 249, img: "IMAGE/kawaii-water-bottle.jpg" },
+    { id: 19, name: "Cute Lunch Box", price: 299, img: "IMAGE/cute-lunch-box.jpg" },
+    { id: 20, name: "Mini Desk Organizer", price: 199, img: "IMAGE/mini-desk-organizer.jpg" }
+  ];
+
+  let cart = [];
+
+  function displayProducts() {
+    let html = "";
+
+    products.forEach(product => {
+      html += `
+        <div class="card">
+          <img src="${product.img}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p class="price">₱${product.price}</p>
+          <button class="btn" onclick="addToCart(${product.id})">Add to Cart</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("productList").innerHTML = html;
+  }
+
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+
+    const cartItem = cart.find(item => item.id === id);
+    if (cartItem) {
+      cartItem.qty += 1;
+    } else {
+      cart.push({ ...product, qty: 1 });
+    }
+
+    displayCart();
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    displayCart();
+  }
+
+  function displayCart() {
+    let html = "";
+    let total = 0;
+    let totalItems = 0;
+
+    cart.forEach(item => {
+      total += item.price * item.qty;
+      totalItems += item.qty;
+
+      html += `
+        <div class="cart">
+          <p>${item.name} x ${item.qty} = ₱${item.price * item.qty}</p>
+          <button class="btn" onclick="removeFromCart(${item.id})">Remove</button>
+        </div>
+      `;
+    });
+
+    document.getElementById("cartList").innerHTML = html;
+    document.getElementById("cartSummary").innerHTML =
+      `Total items: ${totalItems} | Total price: ₱${total.toFixed(2)}`;
+  }
+
+  function checkout() {
+    const name = document.getElementById("name").value;
+    const address = document.getElementById("address").value;
+    const contact = document.getElementById("contact").value;
+
+    if (!name || !address || !contact) {
+      document.getElementById("orderResult").innerText = "Please fill out all fields.";
+      return;
+    }
+
+    if (cart.length === 0) {
+      document.getElementById("orderResult").innerText = "Your cart is empty.";
+      return;
+    }
+
+    document.getElementById("orderResult").innerHTML =
+      `Thank you, ${name}!<br>
+       Your order will be delivered to: ${address}.<br>
+       Contact: ${contact}.<br>
+       Total: ${document.getElementById("cartSummary").innerText}`;
+  }
+
+  // Display products and date
+  displayProducts();
+  document.getElementById("date").innerHTML = new Date().toDateString();
+</script>
+
+</body>
+</html>
